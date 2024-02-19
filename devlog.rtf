@@ -8,6 +8,8 @@
 (2) mark the point appropriately (ray projection)\par
 
 \pard\sa200\sl240\slmult1\par
+2/19\par
+second tri is drawn when pointcloud is not drawn --> introduced vertexArray ... and all trouble gone --> pointcloud draws as well as second tri-pair\par
 2/18\par
 hmm, ich stelle fest, dieses projekt hat viele \'e4nderungen zum brake_cascade projekt. ich dachte, ich h\'e4tte es von dort kopiert. woher kommt es also --> muss ich in zukunft die quelle notieren!!  ahhh, neee. \b ist von "two_tris" kopiert \b0 :-)\par
 \cf1\b 2do\cf0\b0  ok, ich brauche erstmal ein koordinatensystem-anzeiger, etwa so wie hier: {{\field{\*\fldinst{HYPERLINK https://github.com/glampert/debug-draw?tab=readme-ov-file }}{\fldrslt{https://github.com/glampert/debug-draw?tab=readme-ov-file\ul0\cf0}}}}\f0\fs22\par
@@ -17,7 +19,7 @@ ok, das grid wird nicht gezeichnet ... wg. glDrawArray & gl... ?\par
 weil: VertexAttribPointer nicht richtig gesetzt. Es fehlte die Funktion, die die location der farben der variable zuordnet. --> \cf3\f1\fs19 gpu_create_variables\f2\lang1031 (). \cf0\f0\fs22\lang7 Dadurch haben *anscheinend* die Farben die vertices \'fcberschrieben\par
 ---\par
 so, jetzt brauche ich mal eine Punktwolke, um das neue rotieren zu testen ...\par
-gut, habe ich jetzt, der source code muss aber nun dringend ge-clean-ed werden.\par
+gut, habe ich jetzt, der source code muss aber nun \cf1\b dringend ge-clean-ed \cf0\b0 werden.\par
 die zweiten tris werden nun aber nicht mehr gezeichnet\par
 2/17\par
 {{\field{\*\fldinst{HYPERLINK https://stackoverflow.com/questions/70617006/how-to-rotate-an-object-around-a-point-with-glm-opengl-c }}{\fldrslt{https://stackoverflow.com/questions/70617006/how-to-rotate-an-object-around-a-point-with-glm-opengl-c\ul0\cf0}}}}\f0\fs22\par

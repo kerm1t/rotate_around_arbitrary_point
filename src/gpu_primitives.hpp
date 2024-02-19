@@ -12,6 +12,8 @@ std::vector<float> grid_colors;
 unsigned int VAO_grid;
 unsigned int VAO_mesh;
 
+unsigned int VAO_pcl;
+
 void grid_create(const float startx, const float stopx, const float dX) {
   for (int x = startx; x <= stopx; x += dX) {
     // 2do, somewhat it didn't work to push a point to a vector of points, instead of a vector of floats <-- on ARM?
@@ -100,6 +102,8 @@ void pcl_gpu_free_buffers() {
 }
 
 void pcl_gpu_push_buffers(int numpoints) { // 2do: move to pointcloud.cpp ?
+  glGenVertexArrays(1, &VAO_pcl);
+  glBindVertexArray(VAO_pcl);
   // (a) vertices
   GLenum err = glGetError();
   if (err != 0)
@@ -113,8 +117,8 @@ void pcl_gpu_push_buffers(int numpoints) { // 2do: move to pointcloud.cpp ?
     int i = 1;
   }
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * lloft::vertices.size(), &lloft::vertices[0], GL_STATIC_DRAW);
-  glEnableVertexAttribArray(vpos_location);
   glVertexAttribPointer(vpos_location, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  glEnableVertexAttribArray(vpos_location); // moved to behind glVertexAttrib... (2/19/2024)
 
   // (b) colors --> x3 :-)
 
@@ -122,11 +126,11 @@ void pcl_gpu_push_buffers(int numpoints) { // 2do: move to pointcloud.cpp ?
   glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[0]);
   // create new data store for a buffer object, copy <data> into data store
   glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * lloft::vertices.size(), &lloft::colors[0][0], GL_STATIC_DRAW);
-  // enable generic attribute --> s. link to shader ... vcol_location = glGetAttribLocation(program, "vCol");
-  glEnableVertexAttribArray(vcol_location);
   // define (specify location and data format of) an array of attribute data
   // If pointer is not NULL, a non-zero named buffer object must be bound to the GL_ARRAY_BUFFER target 
   glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  // enable generic attribute --> s. link to shader ... vcol_location = glGetAttribLocation(program, "vCol");
+  glEnableVertexAttribArray(vcol_location);
 
   // push color buffer1 and 2, but no need to bind them to shader attribute yet (user input 1,2,3,...)
   glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[1]);
@@ -143,10 +147,11 @@ void pcl_render() { // 2do: move to pointcloud.cpp ?
   // (a) bind the buffer (pos+col) and 
   // (b) set the shader attribute
   // before drawing
-  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-  glVertexAttribPointer(vpos_location, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-  glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[colorcoding]); // 2do, there is colorcoding and color_coding
-  glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  glBindVertexArray(VAO_pcl);
+  //  glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+//  glVertexAttribPointer(vpos_location, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+//  glBindBuffer(GL_ARRAY_BUFFER, colorbuffer[colorcoding]); // 2do, there is colorcoding and color_coding
+//  glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
   glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(npoints));
 }
 
